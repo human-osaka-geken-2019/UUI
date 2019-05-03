@@ -1,5 +1,5 @@
-﻿#ifndef UNLIMITE_UNSIGNED_INTEGER_CALCULATORH
-#define UNLIMITE_UNSIGNED_INTEGER_CALCULATORH
+﻿#ifndef UNLIMITE_UNSIGNED_INTEGER_CALCULATOR_H
+#define UNLIMITE_UNSIGNED_INTEGER_CALCULATOR_H
 
 #include <Windows.h>
 
@@ -196,10 +196,14 @@ public:
 		UUI rhsInterpolated;
 		Interporate(&rhsInterpolated, rhs, interpolationSize);
 
+		UUI result;
+
 		for (int i = 0; i < static_cast<int>(interpolationSize); ++i)
 		{
-			MultiplyFull(pResult, i, lhsInterpolated, rhsInterpolated);
+			MultiplyFull(&result, i, lhsInterpolated, rhsInterpolated);
 		}
+
+		*pResult = result;
 	}
 
 	static const BYTE DIGIT_VALUE_MAX = 9;
@@ -216,7 +220,7 @@ private:
 	}
 };
 
-#endif // !UNLIMITE_UNSIGNED_INTEGER_CALCULATORH
+#endif // !UNLIMITE_UNSIGNED_INTEGER_CALCULATOR_H
 
 ///// <summary>
 ///// キャリー先読みなしの加算器

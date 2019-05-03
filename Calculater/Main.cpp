@@ -7,8 +7,8 @@
 
 int main()
 {
-	UUI a = { 0, 0, 1 };
-	UUI b = { 1 };
+	UUI a = { 1 };
+	UUI b = { 4, 0, 5, 0, 9, 9, 9, 1 };
 
 	UUI c;
 
@@ -38,11 +38,15 @@ int main()
 		std::cout << std::endl;
 	};
 
-	OutPutUnlimitedInt(a);
-	OutPutUnlimitedInt(b);
+	//OutPutUnlimitedInt(a);
+	//OutPutUnlimitedInt(b);
 
-	UUICalculator::Multiply(&c, a, b);
-	OutPutUnlimitedInt(c);
+	for (int i = 0; i < 6; ++i)
+	{
+		UUICalculator::Multiply(&a, a, b);
+
+		OutPutUnlimitedInt(a);
+	}
 
 	/*UUI ans;
 	Adder::Calc(&ans, a, b);
