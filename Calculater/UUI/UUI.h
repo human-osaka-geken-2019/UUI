@@ -27,6 +27,11 @@ public:
 		std::reverse(m_digits.begin(), m_digits.end());
 	}
 
+	UUI()
+	{
+
+	}
+
 	~UUI()
 	{
 
@@ -47,10 +52,10 @@ public:
 		std::cout << std::endl;
 	};
 
-	UUI& Pow(UINT y)
+	UUI& Pow(UUI& x, UINT y)
 	{
-		UUI powTmp(*this);
-		
+		m_digits = x.DigitValuesRef();
+
 		if (y == 0)
 		{
 			m_digits.clear();
@@ -58,12 +63,17 @@ public:
 			m_digits.push_back(1);
 		}
 
-		for (UINT i = 0; i < y - 1 && y != 0; ++i)
+		for (UINT i = 0; i < y - 1; ++i)
 		{
-			(*this) *= powTmp;
+			UUICalculator::Multiply(&m_digits, m_digits, x.DigitValuesRef());
 		}
 
 		return *this;
+	}
+
+	UUI& Pow(UINT y)
+	{
+		return Pow(*this, y);
 	}
 
 	UUI& operator+=(const UUI& rhs)

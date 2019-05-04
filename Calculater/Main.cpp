@@ -11,9 +11,10 @@ int main()
 
 	myBirth.OutPut();
 
-	myBirth.Pow(6);
+	UUI myBirthPowed6;
+	myBirthPowed6.Pow(myBirth, 6);
 
-	myBirth.OutPut();
+	myBirthPowed6.OutPut();
 
 	double K = 1.9990504;
 
