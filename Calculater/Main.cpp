@@ -1,52 +1,31 @@
 ﻿#include <conio.h>
 #include <iostream>
 #include <random>
+#include <iomanip>
 
 #include "UUI.h"
-#include "UUICalculator.h"
 
 int main()
 {
-	UUI a = { 1 };
-	UUI b = { 4, 0, 5, 0, 9, 9, 9, 1 };
+	UUI myBirth(8, 1, 9, 9, 9, 0, 5, 0, 4);
 
-	UUI c;
+	myBirth.OutPut();
 
-	/*auto CreateRandom = [&](UUI* pUnlimitedInt)
-	{
-		static std::random_device randDevice;
-		static std::minstd_rand randGenerator(randDevice());
-		static std::uniform_int_distribution<> byteRangeRand(0, UCHAR_MAX);
-		static std::uniform_int_distribution<> digitRangeRand(0, 9);
+	myBirth.Pow(6);
 
-		for (int i = 1; i >= 0; --i)
-		{
-			pUnlimitedInt->push_back(digitRangeRand(randGenerator));
-		}
-	};
+	myBirth.OutPut();
 
-	CreateRandom(&a);
-	CreateRandom(&b);*/
+	double K = 1.9990504;
 
-	auto OutPutUnlimitedInt = [&](UUI& unlimitedInt)
-	{
-		for (int i = static_cast<int>(unlimitedInt.size()) - 1; i >= 0; --i)
-		{
-			std::cout << static_cast<int>(unlimitedInt[i]);
-		}
+	double time = 3.2;
 
-		std::cout << std::endl;
-	};
+	double velocity = std::pow(K, time);
+	double movement = velocity * time;
 
-	//OutPutUnlimitedInt(a);
-	//OutPutUnlimitedInt(b);
-
-	for (int i = 0; i < 6; ++i)
-	{
-		UUICalculator::Multiply(&a, a, b);
-
-		OutPutUnlimitedInt(a);
-	}
+	std::cout << std::fixed;
+	std::cout << std::setprecision(2) << velocity << std::endl;
+	std::cout << std::setprecision(2) << movement << std::endl;
+	std::cout << std::defaultfloat;
 
 	/*UUI ans;
 	Adder::Calc(&ans, a, b);

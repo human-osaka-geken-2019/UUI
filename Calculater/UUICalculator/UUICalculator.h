@@ -5,14 +5,14 @@
 
 #include <functional>
 
-#include "UUI.h"
-
 /// <summary>
 /// UnlimitedUnsignedIntの計算系
 /// </summary>
 class UUICalculator
 {
 public:
+	using DigitValues = std::vector<BYTE>;
+
 	/// <summary>
 	/// 同位桁同士の足し算
 	/// </summary>
@@ -36,7 +36,7 @@ public:
 	/// <param name="pLhs">左辺全て</param>
 	/// <param name="rhs">右辺の計算を行う値</param>
 	/// <param name="digitNum">現在の桁数</param>
-	static inline void AddFull(UUI* pLhs, BYTE rhs, int digitNum)
+	static inline void AddFull(DigitValues* pLhs, BYTE rhs, int digitNum)
 	{
 		BYTE carry = 0;
 
@@ -55,7 +55,7 @@ public:
 		AddFull(pLhs, carry, digitNum + 1);
 	};
 
-	static void Interporate(UUI* pInterpolated, const UUI& origin, size_t interpolationSize)
+	static void Interporate(DigitValues* pInterpolated, const DigitValues& origin, size_t interpolationSize)
 	{
 		*pInterpolated = origin;
 
@@ -63,15 +63,15 @@ public:
 		pInterpolated->resize(interpolationSize, 0);
 	}
 
-	static void Add(UUI* pResult, const UUI& lhs, const UUI& rhs)
+	static void Add(DigitValues* pResult, const DigitValues& lhs, const DigitValues& rhs)
 	{
 		//桁が大きいほうに合わせるため
 		size_t interpolationSize = max(lhs.size(), rhs.size());
 
-		UUI lhsInterpolated;
+		DigitValues lhsInterpolated;
 		Interporate(&lhsInterpolated, lhs, interpolationSize);
 
-		UUI rhsInterpolated;
+		DigitValues rhsInterpolated;
 		Interporate(&rhsInterpolated, rhs, interpolationSize);
 
 		for (int i = 0; i < static_cast<int>(interpolationSize); ++i)
@@ -104,7 +104,7 @@ public:
 	/// </summary>
 	/// <param name="pInterpolated">補間されるもの</param>
 	/// <param name="interpolationSize">増やした際の全体でのサイズ</param>
-	static void SizeUp(UUI* pInterpolated, size_t interpolationSize)
+	static void SizeUp(DigitValues* pInterpolated, size_t interpolationSize)
 	{
 		if (pInterpolated->size() >= interpolationSize) return;
 
@@ -118,7 +118,7 @@ public:
 	/// <param name="pDigits">代入されるもの</param>
 	/// <param name="digitValue">代入される値</param>
 	/// <param name="digitNum">代入する桁</param>
-	static void SubstituteDigitNum(UUI* pDigits, BYTE digitValue, int digitNum)
+	static void SubstituteDigitNum(DigitValues* pDigits, BYTE digitValue, int digitNum)
 	{
 		if (digitValue == 0) return;
 
@@ -137,7 +137,7 @@ public:
 	/// <param name="rhs">右辺</param>
 	/// <param name="digitNum">掛ける側の桁</param>
 	/// <param name="digitNumMultiplied">掛け算先の桁</param>
-	static inline void MultiplyHalfAndKeepResultAndCarry(UUI* pResultBuff, UUI* pCarryBuff, 
+	static inline void MultiplyHalfAndKeepResultAndCarry(DigitValues* pResultBuff, DigitValues* pCarryBuff, 
 		BYTE lhs, BYTE rhs, int digitNumMultiplys, int digitNumMultiplied)
 	{
 		int resultDigitsNum = digitNumMultiplys + digitNumMultiplied;
@@ -161,10 +161,10 @@ public:
 	/// <param name="digitNumMultiply">掛ける側の要素番号</param>
 	/// <param name="lhs">左辺</param>
 	/// <param name="rhs">右辺</param>
-	static inline void MultiplyFull(UUI* pResult, int digitNumMultiplys, const UUI& lhs, const UUI& rhs)
+	static inline void MultiplyFull(DigitValues* pResult, int digitNumMultiplys, const DigitValues& lhs, const DigitValues& rhs)
 	{
-		UUI carryBuffer;
-		UUI resultBuffer;
+		DigitValues carryBuffer;
+		DigitValues resultBuffer;
 
 		int multipliedSize = static_cast<int>(rhs.size());
 
@@ -173,7 +173,7 @@ public:
 			MultiplyHalfAndKeepResultAndCarry(&resultBuffer, &carryBuffer, lhs[i], rhs[digitNumMultiplys], digitNumMultiplys, i);
 		}
 
-		UUI resultComponent;
+		DigitValues resultComponent;
 		Add(&resultComponent, resultBuffer, carryBuffer);
 
 		Add(pResult, *pResult, resultComponent);
@@ -185,18 +185,18 @@ public:
 	/// <param name="pResult">結果を入れるもの</param>
 	/// <param name="lhs">左辺</param>
 	/// <param name="rhs">右辺</param>
-	static void Multiply(UUI* pResult, const UUI& lhs, const UUI& rhs)
+	static void Multiply(DigitValues* pResult, const DigitValues& lhs, const DigitValues& rhs)
 	{
 		//桁が大きいほうに合わせるため
 		size_t interpolationSize = max(lhs.size(), rhs.size());
 
-		UUI lhsInterpolated;
+		DigitValues lhsInterpolated;
 		Interporate(&lhsInterpolated, lhs, interpolationSize);
 
-		UUI rhsInterpolated;
+		DigitValues rhsInterpolated;
 		Interporate(&rhsInterpolated, rhs, interpolationSize);
 
-		UUI result;
+		DigitValues result;
 
 		for (int i = 0; i < static_cast<int>(interpolationSize); ++i)
 		{
@@ -228,16 +228,16 @@ private:
 ///// <param name="pResult">計算結果を保管する</param>
 ///// <param name="lhs">足し合わせる値1</param>
 ///// <param name="rhs">足し合わせる値2</param>
-//static void Calc(UUI* pResult, const UUI& lhs, const UUI& rhs)
+//static void Calc(DigitValues* pResult, const DigitValues& lhs, const DigitValues& rhs)
 //{
 //	//桁が大きいほうに合わせるため
 //	size_t interpolationSize = max(lhs.size(), rhs.size());
 //
-//	UUI& rResult = *(std::move(pResult));
+//	DigitValues& rResult = *(std::move(pResult));
 //	rResult.resize(interpolationSize);
 //
-//	UUI lhsInterpolatedBits;
-//	UUI rhsInterpolatedBits;
+//	DigitValues lhsInterpolatedBits;
+//	DigitValues rhsInterpolatedBits;
 //	InterpolateBits(2, interpolationSize, &lhsInterpolatedBits, &lhs, &rhsInterpolatedBits, &rhs);
 //
 //	//桁上がり
@@ -257,7 +257,7 @@ private:
 //}
 //
 //static inline void AddBit(const size_t& sizeItr, int bitItr, BYTE* pSum, BYTE* pCarry, BYTE* pPrevCarry,
-//	const size_t& interpolationSize, UUI* pResult, const UUI& lhsInterpolatedBits, const UUI& rhsInterpolatedBits)
+//	const size_t& interpolationSize, DigitValues* pResult, const DigitValues& lhsInterpolatedBits, const DigitValues& rhsInterpolatedBits)
 //{
 //	BYTE lhsBit = lhsBit = MaskLSB(lhsInterpolatedBits[sizeItr] >> bitItr);
 //	BYTE rhsBit = rhsBit = MaskLSB(rhsInterpolatedBits[sizeItr] >> bitItr);
@@ -286,7 +286,7 @@ private:
 //	*pPrevCarry = *pCarry;
 //}
 //
-//static inline void IncreaseSize(UUI* pResult, BYTE lhsBit, BYTE rhsBit)
+//static inline void IncreaseSize(DigitValues* pResult, BYTE lhsBit, BYTE rhsBit)
 //{
 //	BYTE increaseByte = (lhsBit == 0) ? 0b00000000 : 0b11111111;
 //
@@ -328,22 +328,22 @@ private:
 //
 //	while ((--size) >= 0)
 //	{
-//		UUI* pResult = va_arg(pUnlimitedIntList, UUI*);
+//		DigitValues* pResult = va_arg(pUnlimitedIntList, DigitValues*);
 //
-//		InterpolateBits(pResult, va_arg(pUnlimitedIntList, UUI*), interpolationSize);
+//		InterpolateBits(pResult, va_arg(pUnlimitedIntList, DigitValues*), interpolationSize);
 //	}
 //
 //	va_end(pUnlimitedIntList);
 //}
 //
-//static inline void InterpolateBits(UUI* pResult, const UUI& origin, size_t size)
+//static inline void InterpolateBits(DigitValues* pResult, const DigitValues& origin, size_t size)
 //{
 //	size_t originSize = origin.size();
 //	size_t sizeDiff = size - originSize;
 //
 //	if (sizeDiff < 0) return;
 //
-//	UUI& rResult = *(std::move(pResult));
+//	DigitValues& rResult = *(std::move(pResult));
 //	rResult = origin;
 //
 //	if (originSize == size) return;
@@ -356,14 +356,14 @@ private:
 //	}
 //}
 //
-//static inline void InterpolateBits(UUI* pResult, const UUI* pOrigin, size_t size)
+//static inline void InterpolateBits(DigitValues* pResult, const DigitValues* pOrigin, size_t size)
 //{
 //	size_t originSize = pOrigin->size();
 //	size_t sizeDiff = size - originSize;
 //
 //	if (sizeDiff < 0) return;
 //
-//	UUI& rResult = *(std::move(pResult));
+//	DigitValues& rResult = *(std::move(pResult));
 //	rResult = *pOrigin;
 //
 //	if (originSize == size) return;
