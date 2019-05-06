@@ -1,7 +1,8 @@
 ﻿#include <conio.h>
+#include <math.h>
+#include <iomanip>
 #include <iostream>
 #include <random>
-#include <iomanip>
 
 #include "UUI.h"
 
@@ -33,20 +34,40 @@ int main()
 	myBirthPowed6.OutPut();
 
 	OutPutString("\nQ3\n\n");
+
 	double K = 1.9990504;
-	double time = 3.2;
+	double time_sec = 3.2;
 
-	OutPutFixedFloat(time, 1);
-	OutPutString("秒後の速度 : ");
+	//移動距離
+	double movement = 0.0;
 
-	//1秒経過するごとに速度がK倍し、初速度が1.0のためK^timeはtime時点での速度となる
-	//timeが0の時K^0となり速度は1.0になる
-	double velocity = std::pow(K, time);
-	OutPutFixedFloat(velocity, 2);
+	//小数点以下を破棄した時間
+	int flooredTime_sec = static_cast<int>(time_sec);
 
-	OutPutString("\n\n距離 : ");
-	double movement = velocity * time;
-	OutPutFixedFloat(movement, 2);
+	//1.0秒経過毎に速度がK倍されるため
+	for (int i = 0; i <= flooredTime_sec; ++i)
+	{
+		//i秒経過時の速度、初速度は1.0
+		double velocity = pow(K, i);
+
+		//0秒の場合移動を行っていないので0.0を返す
+		movement += ((i == 0) ? 0.0 : velocity);
+
+		//time_secの小数部分摘出
+		double decimalPartOfTime_sec = time_sec - flooredTime_sec;
+
+		if (i != flooredTime_sec) continue;
+
+		OutPutFixedFloat(time_sec, 1);
+		OutPutString("秒後の速度 : ");
+		OutPutFixedFloat(velocity, 2);
+
+		//time_secの小数部分がない場合decimalPartOfTime_secが0.0になるため問題ない
+		movement += velocity * decimalPartOfTime_sec;
+
+		OutPutString("\n\n距離 : ");
+		OutPutFixedFloat(movement, 2);
+	}
 
 	//終了するのを止めるため
 	_getch();
