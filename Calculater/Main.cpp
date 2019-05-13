@@ -8,13 +8,14 @@
 
 using uui::UUI;
 
+template<typename T>
+static void OutPut(const T& value)
+{
+	std::cout << value << std::flush;
+};
+
 int main()
 {
-	auto OutPutString = [](const char* pString)
-	{
-		std::cout << pString << std::flush;
-	};
-
 	auto OutPutFixedFloat = [](double value, int precisionPlace)
 	{
 		std::cout << std::fixed;
@@ -22,18 +23,29 @@ int main()
 		std::cout << std::defaultfloat;
 	};
 
-	OutPutString("Q2\n\n");
+	OutPut("Q2\n\n");
 
-	OutPutString("誕生日 : ");
+	OutPut("誕生日 : ");
 	UUI myBirth(8, 1, 9, 9, 9, 0, 5, 0, 4);
 	myBirth.OutPut();
 
-	OutPutString("\n誕生日の6乗 : ");
+	OutPut("\n誕生日の6乗 : ");
 	UUI myBirthPowed6;
 	myBirthPowed6.Pow(myBirth, 6);
 	myBirthPowed6.OutPut();
 
-	OutPutString("\nQ3\n\n");
+	OutPut("\n各桁の合計 : ");
+
+	int totalDigitValue = 0;
+
+	for (int i = 0; i < myBirthPowed6.DigitNum(); ++i)
+	{
+		totalDigitValue += myBirthPowed6[i];
+	}
+
+	OutPut(totalDigitValue);
+
+	OutPut("\n\nQ3\n\n");
 
 	double K = 1.9990504;
 	double time_sec = 3.2;
@@ -58,14 +70,16 @@ int main()
 
 		if (i != flooredTime_sec) continue;
 
+		OutPut("A\n");
 		OutPutFixedFloat(time_sec, 1);
-		OutPutString("秒後の速度 : ");
+		OutPut("秒後の速度 : ");
 		OutPutFixedFloat(velocity, 2);
 
 		//time_secの小数部分がない場合decimalPartOfTime_secが0.0になるため問題ない
 		movement += velocity * decimalPartOfTime_sec;
 
-		OutPutString("\n\n距離 : ");
+		OutPut("\n\nB\n");
+		OutPut("距離 : ");
 		OutPutFixedFloat(movement, 2);
 	}
 

@@ -348,4 +348,9 @@ UUI& UUI::operator*=(const UUI& rhs)
 {
 	return (*this) = (*this) * rhs;
 }
+
+BYTE& UUI::operator[](const size_t& index)
+{
+	return m_digits[index];
+}
 }// namespace uui

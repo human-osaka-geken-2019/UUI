@@ -58,8 +58,17 @@ public:
 	/// 自身を乗算する
 	/// </summary>
 	/// <param name="y">何乗するか</param>
-	/// <returns></returns>
+	/// <returns>自身の参照</returns>
 	UUI& Pow(UINT y);
+
+	/// <summary>
+	/// 桁数を返す
+	/// </summary>
+	/// <returns>桁数</returns>
+	inline size_t DigitNum()const
+	{
+		return m_digits.size();
+	}
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	// オペレータ
@@ -98,6 +107,13 @@ public:
 	/// <param name="rhs">掛け合わせる値</param>
 	/// <returns>自身の参照</returns>
 	UUI& operator*=(const UUI& rhs);
+
+	/// <summary>
+	/// 引数の桁の参照を返す
+	/// </summary>
+	/// <param name="index">指定する桁数</param>
+	/// <returns>引数の桁の参照</returns>
+	BYTE& operator[](const size_t& index);
 
 private:
 	using DigitValues = std::vector<BYTE>;
